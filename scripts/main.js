@@ -16,8 +16,8 @@ const DisplayedTaskList = document.querySelector(`.to-do-list`);
 const DisplayedTaskListDone = document.querySelector(`.done-list`);
 
 // Checkbox
-const checkBox = document.querySelector(`.checkbox`);
-
+const toDoListContainer = document.querySelector(`.to-do-list`);
+const doneListContainer = document.querySelector(`.done-list`);
 // ==============================
 // 🎊 Variables globales
 // ==============================
@@ -51,7 +51,7 @@ function displayTaskList() {
 
   taskList.forEach((element, index) => {
     const newDiv = document.createElement("div");
-    newDiv.innerHTML = `<summary class="task">
+    newDiv.innerHTML = `<summary>
     <span>
         <input type="checkbox">
         ${element.name}
@@ -72,7 +72,7 @@ function displayTaskListDone() {
   
     taskListDone.forEach((element) => {
       const newDiv = document.createElement("div");
-      newDiv.innerHTML = `<summary class="task">
+      newDiv.innerHTML = `<summary>
       <span>
           <input type="checkbox" class="checkbox">
           ${element.name}
@@ -95,7 +95,23 @@ addTaskButton.addEventListener(`click`, (e) => {
   displayTaskListDone();
 });
 
-checkBox.addEventListener(`check`, (e) => {
+toDoListContainer.addEventListener(`input`, (e) => {
     e.preventDefault();
+    let index = e.target.closest(".task").dataset.index;
+    let deletedElement = taskList.splice(index, 1);
+    taskListDone.push(deletedElement[0]);
+    displayTaskList();
+    displayTaskListDone();
+    
+})
+
+doneListContainer.addEventListener(`input`, (e) => {
+    e.preventDefault();
+    let index = e.target.closest(".task").dataset.index;
+    let deletedElement = taskListDone.splice(index, 1);
+    taskList.push(deletedElement[0]);
+    displayTaskList();
+    displayTaskListDone();
+    
 })
 
