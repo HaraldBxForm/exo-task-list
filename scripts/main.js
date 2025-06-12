@@ -29,21 +29,22 @@ const taskListDone = [];
 
 // Utility Functions
 function addTaskToTaskList() {
+  if (!inputTaskName.value.trim() || !inputTaskDate.value.trim()) {
+    alert("Veuillez remplir le nom et la date de la tâche.");
+    return;
+  }
+
   taskList.push({
     name: inputTaskName.value,
     date: inputTaskDate.value,
     description: inputTaskDescription.value,
   });
 
-  console.log(taskList);
+  inputTaskName.value = "";
+  inputTaskDate.value = "";
+  inputTaskDescription.value = "";
 }
 
-// function addTaskToDoneTaskList(task) {
-//   task.statut = "done";
-
-//   taskListDone.push(task);
-//   taskList.remove(task);
-// }
 
 // Display Functions
 function displayTaskList() {
@@ -68,24 +69,31 @@ function displayTaskList() {
 }
 
 function displayTaskListDone() {
-    DisplayedTaskListDone.innerHTML = `<h3>In the tube <button class="tri">trier</button></h3>`;
+    DisplayedTaskListDone.innerHTML = `<h3>Done</h3>`;
   
     taskListDone.forEach((element) => {
       const newDiv = document.createElement("div");
-      newDiv.innerHTML = `<summary>
+      newDiv.innerHTML = `<details><summary>
       <span>
           <input type="checkbox" class="checkbox">
           ${element.name}
       </span>
       <span>${element.date}</span>
     </summary>
-    <p>${element.description}</p>`;
+    <p>${element.description}</p>
+    </details>`;
       newDiv.classList.add("task");
       newDiv.setAttribute("draggable", "true");
       
       DisplayedTaskListDone.appendChild(newDiv);
     });
   }
+
+  // Trier le tableau
+function sortTasksByDate(list) {
+  return taskList.sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
 // ==============================
 // 🧲 Événements
 // ==============================
@@ -114,4 +122,13 @@ doneListContainer.addEventListener(`input`, (e) => {
     displayTaskListDone();
     
 })
+
+toDoListContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("tri")) {
+    e.preventDefault();
+    sortTasksByDate();
+    displayTaskList();
+    displayTaskListDone();
+  }
+});
 
